@@ -56,20 +56,7 @@ app.get('/', (req,res) => {
 });
 
 app.get('/signup', (req, res) => {
-  var html = `
-    <h2>Signup:</h2>
-    <form action='/submitSignup' method='POST'>
-      <input type='text' name='username' placeholder='Username'/>
-      <br>
-      <input type='email' name='email' placeholder='Email'/>
-      <br>
-      <input type='password' name='password' placeholder='Password'/>
-      <br>
-      <button>Submit</button>
-    </form>
-    <a href="/"><button>Return Home</button></a>
-    `;
-    res.send(html);
+  res.render("signup");
 });
 
 app.post('/submitSignup', async (req,res) => {
