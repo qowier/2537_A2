@@ -27,6 +27,8 @@ var {database} = include('databaseConnection');
 
 const userCollection = database.db(mongodb_database).collection('users');
 
+app.set('view engine', 'ejs');
+
 app.use(express.urlencoded({extended: false}));
 
 var mongoStore = MongoStore.create({
@@ -46,32 +48,10 @@ app.use(session({
 
 app.get('/', (req,res) => {
   if (!req.session.authenticated) {
-    const links = `
-      <a href="/signup"><button>Sign Up</button></a>
-      <a href="/login"><button>Log In</button></a>
-    `;
-    const html = `
-      <div>
-        <h1>Welcome to the Home site!</h1>
-        <p>Please sign up or log in</p>
-        <div>${links}</div>
-      </div>
-    `;
-    res.send(html);
+    res.render("index_no_auth");
   }
   else {
-    const links = `
-      <a href="/members"><button>Members Area</button></a>
-      <a href="/logout"><button>Log Out</button></a>
-    `;
-    const html = `
-      <div>
-        <h1>Hello, ${req.session.username}!</h1>
-        <p>Welcome to the Members area.</p>
-        <div>${links}</div>
-      </div>
-    `;
-    res.send(html);
+    res.render("index_auth");
   }
 });
 
