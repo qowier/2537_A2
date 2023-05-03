@@ -111,19 +111,7 @@ app.post('/submitSignup', async (req,res) => {
 });
 
 app.get('/login', (req,res) => {
-  var html = `
-  <h2>Log In</h2>
-  <form action='/loggingin' method='post'>
-    <input type='email' name='email' placeholder='Email'/>
-    <br>
-    <input name='password' type='password' placeholder='password'>
-    <br>
-    <button>Submit</button>
-  </form>
-  <br>
-  <a href="/"><button>Return Home</button></a>
-  `;
-  res.send(html);
+  res.render("login");
 });
 
 app.post('/loggingin', async (req,res) => {
