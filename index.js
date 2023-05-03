@@ -60,49 +60,55 @@ app.get('/signup', (req, res) => {
 });
 
 app.post('/submitSignup', async (req,res) => {
-  var username = req.body.username;
-  var email = req.body.email;
-  var password = req.body.password;
+  const { username, email, password } = req.body;
 
   //Empty field check
   if (!username || !email || !password) {
-    var errorMsg = "";
+    const errorMsg = [];
+
     if (!username) {
-      errorMsg += "Username is required. ";
+      errorMsg.push("Username is required");
     }
     if (!email) {
-      errorMsg += "Email is required. ";
+      errorMsg.push("Email is required");
     }
     if (!password) {
-      errorMsg += "Password is required. ";
+      errorMsg.push("Password is required");
     }
-    // var html = `${errorMsg}<a href="/signup"><button>Try Again</button></a>`;
-    res.status(400).render("signupMissingFields", { errorMsg: errorMsg });
+    res.status(400).render("signupMissingFields", { errorMsg : errorMsg.join('. ') });
     return;
-  } else {
-    const schema = Joi.object(
-      {
-        username: Joi.string().alphanum().max(20).required(),
-        email: Joi.string().email().required(),
-        password: Joi.string().max(20).required()
-      });
-    
-      const validationResult = schema.validate({username, email,password});
-      if (validationResult.error != null) {
-        console.log(validationResult.error);
-        res.status(400).render("signupMissingFields", { errorMsg: validationResult.error});
-        return;
-      }
-    
-      var hashedPassword = await bcrypt.hash(password, saltRounds);
-    
-      await userCollection.insertOne({username: username, email: email, password: hashedPassword});
-      const result = await userCollection.find({email: email}).project({username: 1, email: 1, password: 1, _id: 1}).toArray();
-      req.session.authenticated = true;
-      req.session.username = result[0].username;
-      req.session.email = email;
-      req.session.cookie.maxAge = expireTime;
-      res.redirect("/members");
+  }
+
+  const schema = Joi.object(
+    {
+      username: Joi.string().alphanum().max(20).required(),
+      email: Joi.string().email().required(),
+      password: Joi.string().max(20).required()
+  });
+  
+  try {
+    await schema.validateAsync({username, email, password});
+  } catch (error) {
+    console.log(error);
+    res.status(400).render("signupMissingFields", { errorMsg: error});
+    return;
+  }
+
+  var hashedPassword = await bcrypt.hash(password, saltRounds);
+  try {
+    await userCollection.insertOne({
+      username, 
+      email, 
+      password: hashedPassword
+    });
+    req.session.authenticated = true;
+    req.session.username = username;
+    req.session.email = email;
+    req.session.cookie.maxAge = expireTime;
+    res.redirect("/members");
+  } catch (error) {
+    console.log(error);
+    res.status(500).render("500");
   }
 });
 
