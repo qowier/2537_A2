@@ -236,7 +236,12 @@ app.get('/nosql-injection', async (req,res) => {
 
 app.get('/about', (req,res) => {
   var color = req.query.color;
-  res.send("<h1 style='color:" + color + ";'>Welcome to the about page!!</h1>");
+  res.render("about", {color: color});
+});
+
+app.get('/contact', (req,res) => {
+  var missingEmail = req.query.missing;
+  res.render("contact", {missing: missingEmail});
 });
 
 app.use(express.static(__dirname + "/public"));
