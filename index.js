@@ -27,6 +27,8 @@ var {database} = include('databaseConnection');
 
 const userCollection = database.db(mongodb_database).collection('users');
 
+app.use(express.static(__dirname + "/public"));
+
 app.set('view engine', 'ejs');
 
 app.use(express.urlencoded({extended: false}));
@@ -207,11 +209,16 @@ app.get('/contact', (req,res) => {
   res.render("contact", {missing: missingEmail});
 });
 
+app.get('/admin', async (req,res) => {
+  const result = await userCollection.find().project({username: 1, _id: 1}).toArray();
+
+  res.render("admin", {users: result});
+});
+
 app.get("*", (req,res) => {
 	res.status(404).render("404");
 });
 
-app.use(express.static(__dirname + "/public"));
 
 app.listen(port, () => {
 	console.log("Node application listening on port " + port);
