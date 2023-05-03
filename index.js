@@ -27,8 +27,6 @@ var {database} = include('databaseConnection');
 
 const userCollection = database.db(mongodb_database).collection('users');
 
-app.use(express.static(__dirname + "/public"));
-
 app.set('view engine', 'ejs');
 
 app.use(express.urlencoded({extended: false}));
@@ -215,10 +213,11 @@ app.get('/admin', async (req,res) => {
   res.render("admin", {users: result});
 });
 
+app.use(express.static(__dirname + "/public"));
+
 app.get("*", (req,res) => {
 	res.status(404).render("404");
 });
-
 
 app.listen(port, () => {
 	console.log("Node application listening on port " + port);
