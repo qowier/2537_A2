@@ -68,16 +68,16 @@ app.post('/submitSignup', async (req,res) => {
   if (!username || !email || !password) {
     var errorMsg = "";
     if (!username) {
-      errorMsg += "Username is required.<br>";
+      errorMsg += "Username is required. ";
     }
     if (!email) {
-      errorMsg += "Email is required.<br>";
+      errorMsg += "Email is required. ";
     }
     if (!password) {
-      errorMsg += "Password is required.<br>";
+      errorMsg += "Password is required. ";
     }
-    var html = `${errorMsg}<a href="/signup"><button>Try Again</button></a>`;
-    res.status(400).send(html);
+    // var html = `${errorMsg}<a href="/signup"><button>Try Again</button></a>`;
+    res.status(400).render("signupMissingFields", { errorMsg: errorMsg });
     return;
   } else {
     const schema = Joi.object(
@@ -90,11 +90,7 @@ app.post('/submitSignup', async (req,res) => {
       const validationResult = schema.validate({username, email,password});
       if (validationResult.error != null) {
         console.log(validationResult.error);
-        var html = `
-        ${validationResult.error}
-        <br>
-        <a href="/signup"><button>Try Again</button></a>`;
-        res.status(400).send(html);
+        res.status(400).render("signupMissingFields", { errorMsg: validationResult.error});
         return;
       }
     
