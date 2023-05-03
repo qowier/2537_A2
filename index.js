@@ -51,7 +51,7 @@ app.get('/', (req,res) => {
     res.render("index_no_auth");
   }
   else {
-    res.render("index_auth");
+    res.render("index_auth", { username: req.session.username });
   }
 });
 
