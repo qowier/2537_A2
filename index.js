@@ -75,7 +75,7 @@ app.post('/submitSignup', async (req,res) => {
     if (!password) {
       errorMsg.push("Password is required");
     }
-    res.status(400).render("signupMissingFields", { errorMsg : errorMsg.join('. ') });
+    res.status(400).render("signupError", { errorMsg : errorMsg.join('. ') });
     return;
   }
 
@@ -90,7 +90,7 @@ app.post('/submitSignup', async (req,res) => {
     await schema.validateAsync({username, email, password});
   } catch (error) {
     console.log(error);
-    res.status(400).render("signupMissingFields", { errorMsg: error});
+    res.status(400).render("signupError", { errorMsg: error});
     return;
   }
 
@@ -117,39 +117,28 @@ app.get('/login', (req,res) => {
 });
 
 app.post('/loggingin', async (req,res) => {
-  var email = req.body.email;
-  var password = req.body.password;
-
+  const email = req.body.email;
+  const password = req.body.password;
   const schema = Joi.string().email().required();
 	const validationResult = schema.validate(email);
+
 	if (validationResult.error != null) {
-	  console.log(validationResult.error);
-    var html = `
-    ${validationResult.error}
-    <br>
-    <a href="/login"><button>Try Again</button></a>`;
-    res.status(400).send(html);
+    res.status(400).render("400");
     return;
 	}
 
-  const result = await userCollection.find({email: email}).project({username: 1, email: 1, password: 1, _id: 1}).toArray();
+  const result = await userCollection.find({email: email})
+    .project({username: 1, email: 1, password: 1, _id: 1})
+    .toArray();
 
+  //if user is not found
   if (result.length != 1) {
-		console.log("user not found");
-    var html = `
-      <p>Invalid email/password combination.</p>
-      <form action = "/login">
-        <button>Try again</button>
-      </form>
-      <br>
-      <a href= "/"><button>Return Home</button></a>
-    `;
-    res.send(html);
+		res.status(400).render("400");
 		return;
 	}
 
+  //If password entered is correct.
   if (await bcrypt.compare(password, result[0].password)) {
-    console.log("correct password");
     req.session.authenticated = true;
     req.session.username = result[0].username;
     req.session.email = email;
@@ -158,10 +147,7 @@ app.post('/loggingin', async (req,res) => {
     return;
 	}
 	else {
-    console.log("incorrect password");
-    var html = `Invalid email/password combination.<br>
-    <a href="/login"><button>Try Again</button></a>`;
-    res.status(400).send(html);
+    res.status(400).render("400");
     return;
 	}
 });
@@ -170,34 +156,9 @@ app.get('/members', (req,res) => {
   if (!req.session.authenticated) {
     res.redirect('/');
   }
-
-  var username = req.session.username;
-  var gif;
   const randomNum = Math.floor(Math.random() * 10000) + 1;
-
-  if (randomNum >= 1 && randomNum < 3000) {
-    gif = "<img src='/shake.gif' style='width:500px;'>";
-  }
-  else if (randomNum >= 3000 && randomNum < 6000) {
-    gif ="<img src='/eat_popcorn.gif' style='width:500px;'>";
-  }
-  else if (randomNum >= 6000 && randomNum <= 9000) {
-    gif = "<img src='/rick_roll.gif' style='width:500px;'>";
-  }
-  else if (randomNum > 9000) {
-    gif ="<img src='/over_9000.gif' style = 'width:500px;'>";
-  }
-
-  var html = `
-    <h2> Hello, ${username}! </h2>
-    <h2>Welcome to the Members Area!</h2>
-    <br>
-    ${gif}
-    <br>
-    <a href="/"><button>Return Home</button></a>
-    <br>
-    <a href="/logout"><button>Log Out</button></a>`;
-  res.send(html);
+  console.log("Number rolled is: " + randomNum);
+  res.render("members", {username: req.session.username, randomNum});
 });
 
 app.get('/logout', (req,res) => {
@@ -246,12 +207,11 @@ app.get('/contact', (req,res) => {
   res.render("contact", {missing: missingEmail});
 });
 
-app.use(express.static(__dirname + "/public"));
-
 app.get("*", (req,res) => {
-	res.status(404);
-	res.render("404");
+	res.status(404).render("404");
 });
+
+app.use(express.static(__dirname + "/public"));
 
 app.listen(port, () => {
 	console.log("Node application listening on port " + port);
