@@ -46,6 +46,42 @@ app.use(session({
 }
 ));
 
+//Authentication
+function isValidSession(req) {
+  if (req.session.authenticated) {
+      return true;
+  }
+  return false;
+}
+
+function sessionValidation(req,res,next) {
+  if (isValidSession(req)) {
+      next();
+  }
+  else {
+      res.redirect('/login');
+  }
+}
+
+//Authorization
+function isAdmin(req) {
+  if (req.session.user_type == 'admin') {
+      return true;
+  }
+  return false;
+}
+
+function adminAuthorization(req, res, next) {
+  if (!isAdmin(req)) {
+      res.status(403);
+      res.render("errorMessage", {error: "Not Authorized"});
+      return;
+  }
+  else {
+      next();
+  }
+}
+
 app.get('/', (req,res) => {
   if (!req.session.authenticated) {
     res.render("index_no_auth");
