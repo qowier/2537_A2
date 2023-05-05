@@ -1,11 +1,13 @@
 <%- include("templates/header") %> 
-  <h2>Email address:</h2>
-  <form action='/submitEmail' method='post'>
-    <input name='email' type='text' placeholder='email'>
-    <br><br>
-    <button class="btn btn-primary">Submit</button>
+  <h2>Enter your email to contact us!</h2>
+  <form action='/submitContact' method='post'>
+    <div class="form-floating">
+      <input id="floatingInput" class="form-control" type='email' name='email' placeholder='Email'/>
+      <label for="floatingInput">Email address</label>
+    </div>
+    <button class="w-100 btn btn-lg btn-primary">Submit</button>
   </form>
   <% if (missing) { %>
-    <br> Email is required.
+      <br> email is required
   <% } %>  
 <%- include("templates/footer") %> 

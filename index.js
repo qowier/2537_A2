@@ -247,6 +247,16 @@ app.get('/contact', (req,res) => {
   res.render("contact", {missing: missingEmail});
 });
 
+app.post('/submitContact', (req,res) => {
+  var email = req.body.email;
+  if (!email) {
+    res.redirect('/contact?missing=1');
+  }
+  else {
+    res.send("Thanks for subscribing with your email: "+email);
+  }
+});
+
 app.get('/admin', sessionValidation, adminAuthorization, async (req,res) => {
   const result = await userCollection.find().project({username: 1, _id: 1, email: 1, user_type: 1}).toArray();
 
