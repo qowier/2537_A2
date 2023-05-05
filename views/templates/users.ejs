@@ -1,1 +1,4 @@
-<li> <%= user.username %> </li>
+<ul>
+  <%= user.username%> (<%= user.user_type || 'No Role Assigned'  %>)
+  <%=console.log(user)%>
+</ul>

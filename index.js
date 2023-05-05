@@ -248,7 +248,7 @@ app.get('/contact', (req,res) => {
 });
 
 app.get('/admin', sessionValidation, adminAuthorization, async (req,res) => {
-  const result = await userCollection.find().project({username: 1, _id: 1}).toArray();
+  const result = await userCollection.find().project({username: 1, _id: 1, email: 1, user_type: 1}).toArray();
 
   res.render("admin", {users: result});
 });

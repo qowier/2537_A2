@@ -1,20 +1,18 @@
 <%- include("templates/header") %> 
+<div class = "container-members">
   <div>
     <h2> Hello, <%= username %>! </h2>
     <h2>Welcome to the Members Area!</h2>
-    <br>
-    <% if (randomNum >= 1 && randomNum < 3000) { %>
-      <img src='/shake.gif' style='width:500px;'>
-    <% } else if (randomNum >= 3000 && randomNum < 6000) { %>
-      <img src='/eat_popcorn.gif' style='width:500px;'>
-    <% } else if (randomNum >= 6000 && randomNum <= 9000) { %>
-      <img src='/rick_roll.gif' style='width:500px;'>
-    <% } else if (randomNum > 9000) { %>
-      <img src='/over_9000.gif' style='width:500px;'>
-    <% } %> 
-    <br>
-    <a href="/"><button>Return Home</button></a>
-    <br>
-    <a href="/logout"><button>Log Out</button></a>
   </div>
+  <div class="image-fluid row mb-3 text-center">
+    <div class="col-sm-4 themed-grid-col"><img class="img-fluid" src='/shake.gif'></div>
+    <div class="col-sm-4 themed-grid-col"><img class="img-fluid" src='/eat_popcorn.gif'></div>
+    <div class="col-sm-4 themed-grid-col"><img class="img-fluid" src='/spongebob.gif'></div>
+    <div class="col-sm-4 themed-grid-col"><img class="img-fluid" src='/over_9000.gif'></div>
+    <div class="col-sm-4 themed-grid-col"><img class="img-fluid" src='/rick_roll.gif'></div>
+  </div>
+  <a href="/"><button>Return Home</button></a>
+  <br>
+  <a href="/logout"><button>Log Out</button></a>
+</div>
 <%- include("templates/footer") %> 
