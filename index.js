@@ -73,12 +73,12 @@ function isAdmin(req) {
 
 function adminAuthorization(req, res, next) {
   if (!isAdmin(req)) {
-      res.status(403);
-      res.render("403");
-      return;
+    res.status(403);
+    res.render("403");
+    return;
   }
   else {
-      next();
+    next();
   }
 }
 
