@@ -253,7 +253,7 @@ app.post('/submitContact', (req,res) => {
     res.redirect('/contact?missing=1');
   }
   else {
-    res.send("Thanks for subscribing with your email: "+email);
+    res.render("contactSuccess");
   }
 });
 
