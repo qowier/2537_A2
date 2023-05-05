@@ -74,7 +74,7 @@ function isAdmin(req) {
 function adminAuthorization(req, res, next) {
   if (!isAdmin(req)) {
       res.status(403);
-      res.render("errorMessage", {error: "Not Authorized"});
+      res.render("403");
       return;
   }
   else {
@@ -135,7 +135,8 @@ app.post('/submitSignup', async (req,res) => {
     await userCollection.insertOne({
       username, 
       email, 
-      password: hashedPassword
+      password: hashedPassword,
+      user_type: "user"
     });
     req.session.authenticated = true;
     req.session.username = username;
@@ -164,7 +165,7 @@ app.post('/loggingin', async (req,res) => {
 	}
 
   const result = await userCollection.find({email: email})
-    .project({username: 1, email: 1, password: 1, _id: 1})
+    .project({username: 1, email: 1, password: 1, user_type: 1, _id: 1})
     .toArray();
 
   //if user is not found
@@ -178,6 +179,7 @@ app.post('/loggingin', async (req,res) => {
     req.session.authenticated = true;
     req.session.username = result[0].username;
     req.session.email = email;
+    req.session.user_type = result[0].user_type;
     req.session.cookie.maxAge = expireTime;
     res.redirect('/members');
     return;
@@ -191,7 +193,6 @@ app.post('/loggingin', async (req,res) => {
 app.use('/members', sessionValidation);
 app.get('/members', (req,res) => {
   const randomNum = Math.floor(Math.random() * 10000) + 1;
-  console.log("Number rolled is: " + randomNum);
   res.render("members", {username: req.session.username, randomNum});
 });
 
@@ -224,7 +225,12 @@ app.get('/nosql-injection', async (req,res) => {
 	   return;
 	}	
 
-	const result = await userCollection.find({username: username}).project({username: 1, password: 1, _id: 1}).toArray();
+	const result = await userCollection.find({username: username}).project({
+    username: 1, 
+    email: 1, 
+    password: 1, 
+    user_type: 1, 
+    _id: 1}).toArray();
 
 	console.log(result);
 
@@ -241,7 +247,7 @@ app.get('/contact', (req,res) => {
   res.render("contact", {missing: missingEmail});
 });
 
-app.get('/admin', async (req,res) => {
+app.get('/admin', sessionValidation, adminAuthorization, async (req,res) => {
   const result = await userCollection.find().project({username: 1, _id: 1}).toArray();
 
   res.render("admin", {users: result});
