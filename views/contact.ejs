@@ -1,10 +1,11 @@
 <%- include("templates/header") %> 
   <h2>Email address:</h2>
   <form action='/submitEmail' method='post'>
-      <input name='email' type='text' placeholder='email'>
-      <button>Submit</button>
+    <input name='email' type='text' placeholder='email'>
+    <br><br>
+    <button class="btn btn-primary">Submit</button>
   </form>
   <% if (missing) { %>
-      <br> email is required
+    <br> Email is required.
   <% } %>  
 <%- include("templates/footer") %> 

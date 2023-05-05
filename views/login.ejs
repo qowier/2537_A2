@@ -1,12 +1,16 @@
 <%- include("templates/header") %> 
+<div class="form-signin w-100 m-auto">
   <h2>Log In</h2>
   <form action='/loggingin' method='post'>
-    <input type='email' name='email' placeholder='Email'/>
-    <br>
-    <input name='password' type='password' placeholder='password'>
-    <br>
-    <button>Submit</button>
+    <div class="form-floating">
+      <input id="floatingInput" class="form-control" type='email' name='email' placeholder='Email'/>
+      <label for="floatingInput">Email address</label>
+    </div>
+    <div class="form-floating">
+      <input id="floatingPassword" class="form-control" type='password' name='password' placeholder='Email'/>
+      <label for="floatingPassword">Password</label>
+    </div>
+    <button class="w-100 btn btn-lg btn-primary">Submit</button>
   </form>
-  <br>
-  <a href="/"><button>Return Home</button></a>
+</div>
 <%- include("templates/footer") %> 

@@ -253,6 +253,11 @@ app.get('/admin', sessionValidation, adminAuthorization, async (req,res) => {
   res.render("admin", {users: result});
 });
 
+//This is a tester function for testing pages.
+// app.get('/test', (req, res) => {
+//   res.render("403");
+// });
+
 app.use(express.static(__dirname + "/public"));
 
 app.get("*", (req,res) => {
