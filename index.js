@@ -49,24 +49,24 @@ app.use(session({
 //Authentication
 function isValidSession(req) {
   if (req.session.authenticated) {
-      return true;
+    return true;
   }
   return false;
 }
 
 function sessionValidation(req,res,next) {
   if (isValidSession(req)) {
-      next();
+    next();
   }
   else {
-      res.redirect('/login');
+    res.redirect('/');
   }
 }
 
 //Authorization
 function isAdmin(req) {
   if (req.session.user_type == 'admin') {
-      return true;
+    return true;
   }
   return false;
 }
@@ -188,10 +188,8 @@ app.post('/loggingin', async (req,res) => {
 	}
 });
 
+app.use('/members', sessionValidation);
 app.get('/members', (req,res) => {
-  if (!req.session.authenticated) {
-    res.redirect('/');
-  }
   const randomNum = Math.floor(Math.random() * 10000) + 1;
   console.log("Number rolled is: " + randomNum);
   res.render("members", {username: req.session.username, randomNum});
