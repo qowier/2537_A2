@@ -1,11 +1,18 @@
 <%- include("templates/header") %> 
-    <div>
-        <h1>Users:</h1>
-    </div>
-    <ul>
+<div style="text-align: left;">
+    <h1>Users:</h1>
+</div>
+<table>
+    <thead>
+        <tr>
+        <th>Username (User Type)</th>
+        </tr>
+    </thead>
+    <tbody>
         <% let i=0; %>
-		<% for(i=0; i < users.length; i++) { %>
+        <% for(i=0; i < users.length; i++) { %>
         <%- include('templates/users', {user: users[i]})  %> 
         <% } %> 
-    </ul>
+    </tbody>
+</table>
 <%- include("templates/footer") %> 

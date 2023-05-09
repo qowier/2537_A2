@@ -259,8 +259,13 @@ app.post('/submitContact', (req,res) => {
 
 app.get('/admin', sessionValidation, adminAuthorization, async (req,res) => {
   const result = await userCollection.find().project({username: 1, _id: 1, email: 1, user_type: 1}).toArray();
-
   res.render("admin", {users: result});
+});
+
+app.post('/admin', sessionValidation, adminAuthorization, async (req,res) =>{
+  const { username, user_type } = req.body;
+  await userCollection.updateOne({ username }, { $set: { user_type } });
+  res.redirect('/admin');
 });
 
 //This is a tester function for testing pages.
