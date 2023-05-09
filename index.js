@@ -268,7 +268,7 @@ app.post('/admin', sessionValidation, adminAuthorization, async (req,res) =>{
   res.redirect('/admin');
 });
 
-//This is a tester function for testing pages.
+//This is a tester function for testing pages. Keep commented unless needed
 // app.get('/test', (req, res) => {
 //   res.render("403");
 // });
